@@ -1,5 +1,5 @@
 {
-    "name": "clean/phpdoc-md",
+    "name": "maosong/phpdoc-md",
     "description": "Parse PHP classes and writes documentation to markdown files",
     "keywords": ["phpdoc", "markdown"],
     "type": "library",
