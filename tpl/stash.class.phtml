@@ -58,13 +58,22 @@
 `This function has no parameters.`
 <?php else : ?>
 <?php foreach ($info->argumentsDescription as $param) : ?>
-(<?= join('|', $param->type) ?>) <?= $param->name ?>
-
+* **(<?= join('|', $param->type) ?>)** <?= $param->name ?>
 <?php if ($param->desc) : ?>
-<?= str_replace("\n", "  \n", $param->desc) ?>
+: <?php
+    if (strpos($param->desc, '```') === 0) {
+        echo "\n" . $param->desc;
+    } else if (strpos($param->desc, '```') !== false) {
+        echo $param->desc;
+    } else {
+        echo str_replace("\n", "  \n", $param->desc);
+    }
+?>
 <?php endif ?>
+
 <?php endforeach ?>
 <?php endif ?>
+
 
 **Return Values**
 

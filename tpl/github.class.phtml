@@ -1,10 +1,10 @@
-# <?= $this->className ?>  
+# <?= $this->className ?>
 
 <?= $this->classDescription->short ?>
 
 <?php if ($this->classDescription->long) : ?>
 
-<?= $this->classDescription->long ?>  
+<?= $this->classDescription->long ?>
 <?php endif ?>
 
 <?php if ($interfaces = $this->interfaces): ?>
@@ -41,7 +41,7 @@
 
 <?php foreach ($this->methods as $name => $info) : ?>
 
-### <?= $this->classShortName ?>::<?= $name ?>  
+### <?= $this->classShortName ?>::<?= $name ?>
 
 **Description**
 
@@ -49,9 +49,9 @@
 <?= $info->visibility ?> <?= $name ?> (<?= join(', ', $info->argumentsList) ?: 'void' ?>)
 ```
 
-<?= $info->shortDescription ?> 
+<?= $info->shortDescription ?>
 
-<?= str_replace("\n", "  \n", $info->longDescription) ?> 
+<?= str_replace("\n", "  \n", $info->longDescription) ?>
 
 **Parameters**
 
@@ -59,13 +59,22 @@
 `This function has no parameters.`
 <?php else : ?>
 <?php foreach ($info->argumentsDescription as $param) : ?>
-(<?= join('|', $param->type) ?>) <?= $param->name ?>
-
+* **(<?= join('|', $param->type) ?>)** <?= $param->name ?>
 <?php if ($param->desc) : ?>
-<?= str_replace("\n", "  \n", $param->desc) ?>
+: <?php
+    if (strpos($param->desc, '```') === 0) {
+        echo "\n" . $param->desc;
+    } else if (strpos($param->desc, '```') !== false) {
+        echo $param->desc;
+    } else {
+        echo str_replace("\n", "  \n", $param->desc);
+    }
+?>
 <?php endif ?>
+
 <?php endforeach ?>
 <?php endif ?>
+
 
 **Return Values**
 
@@ -73,7 +82,7 @@
 `<?= join('|', $param->type) ?>`
 
 <?php if ($param->desc) : ?>
-> <?= str_replace("\n", "  \n", $param->desc) ?>  
+> <?= str_replace("\n", "  \n", $param->desc) ?>
 <?php endif ?>
 
 <?php endforeach ?>
