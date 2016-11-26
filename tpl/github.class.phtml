@@ -1,6 +1,15 @@
 # <?= $this->className ?>
 
-<?= $this->classDescription->short ?>
+
+<?php
+    if ($this->classDescription->short) {
+        echo "{$this->classDescription->short}  \n";
+    }
+    if ($this->classDescription->long) {
+        echo str_replace("\n", "  \n", $this->classDescription->long);
+    }
+?>
+
 
 <?php if ($this->classDescription->long) : ?>
 
@@ -8,31 +17,34 @@
 <?php endif ?>
 
 <?php if ($interfaces = $this->interfaces): ?>
-## Implements:
+## 接口:
 <?= join(', ', $interfaces); ?>
 <?php endif ?>
 
 
 <?php if ($this->parentClass): ?>
-## Extend:
+## 父类:
 
 <?= $this->parentClass ?>
 <?php endif ?>
 
 
-## Methods
+<?php if (count($this->methods) > 0): ?>
+## 方法
 
-| Name | Description |
-|------|-------------|
+| 名称 | 说明 |
+|------|------|
 <?php foreach ($this->methods as $name => $info) : ?>
 |[<?= $name ?>](#<?= strtolower($this->classShortName.$name) ?>)|<?= $info->shortDescription ?>|
 <?php endforeach ?>
+<?php endif ?>
+
 
 <?php if ($this->inheritedMethods): ?>
-## Inherited methods
+## 继承的方法
 
-| Name | Description |
-|------|-------------|
+| 名称 | 说明 |
+|------|------|
 <?php foreach ($this->inheritedMethods as $name => $info) : ?>
 |<?= $name ?>|<?= $info->shortDescription ?: '-' ?>|
 <?php endforeach ?>
@@ -43,21 +55,20 @@
 
 ### <?= $this->classShortName ?>::<?= $name ?>
 
-**Description**
+#### 描述
 
 ```php
 <?= $info->visibility ?> <?= $name ?> (<?= join(', ', $info->argumentsList) ?: 'void' ?>)
 ```
 
-<?= $info->shortDescription ?>
+<?= $info->shortDescription . '  ' ?>
 
 <?= str_replace("\n", "  \n", $info->longDescription) ?>
 
-**Parameters**
 
-<?php if (!$info->argumentsDescription) : ?>
-`This function has no parameters.`
-<?php else : ?>
+<?php if ($info->argumentsDescription): ?>
+#### 参数
+
 <?php foreach ($info->argumentsDescription as $param) : ?>
 * **(<?= join('|', $param->type) ?>)** <?= $param->name ?>
 <?php if ($param->desc) : ?>
@@ -76,16 +87,22 @@
 <?php endif ?>
 
 
-**Return Values**
+<?php if (count($info->returnValue) > 0): ?>
+#### 返回值
 
 <?php foreach ($info->returnValue as $param) : ?>
-`<?= join('|', $param->type) ?>`
-
-<?php if ($param->desc) : ?>
-> <?= str_replace("\n", "  \n", $param->desc) ?>
-<?php endif ?>
+**(<?= join('|', $param->type) ?>)** <?php
+if (strpos($param->desc, '```') === 0) {
+    echo "\n" . $param->desc;
+} else if (strpos($param->desc, '```') !== false) {
+    echo $param->desc;
+} else {
+    echo str_replace("\n", "  \n", $param->desc);
+}
+?>
 
 <?php endforeach ?>
+<?php endif ?>
 
 
 <?php endforeach ?>
